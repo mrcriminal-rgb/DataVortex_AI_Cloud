@@ -1,0 +1,2197 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DataVortex AI — Financial Intelligence</title>
+
+<style>
+:root{
+--bg:#060a12;
+--panel:#0c1320;
+--panel2:#101a2b;
+--line:#1b2940;
+--text:#edf4ff;
+--muted:#7f8da4;
+--cyan:#43d5ff;
+--green:#56d6a4;
+--orange:#ffb45d;
+--red:#ff6f7d;
+--purple:#9b82ff
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+background:radial-gradient(circle at 75% -15%,#173252 0,#060a12 38%);
+color:var(--text);
+font:14px Inter,system-ui,-apple-system,Segoe UI,sans-serif
+}
+
+.app{display:flex;min-height:100vh}
+
+aside{
+position:fixed;
+width:245px;
+height:100vh;
+background:#080e19;
+border-right:1px solid var(--line);
+padding:23px 15px
+}
+
+.logo{
+font-size:21px;
+font-weight:900;
+padding:4px 10px 28px
+}
+
+.logo i{
+font-style:normal;
+color:var(--cyan)
+}
+
+nav{display:grid;gap:5px}
+
+nav button{
+border:0;
+background:transparent;
+color:var(--muted);
+padding:12px;
+border-radius:9px;
+text-align:left;
+cursor:pointer
+}
+
+nav button:hover,
+nav button.active{
+background:#121c2d;
+color:#fff
+}
+
+.bottom{
+position:absolute;
+bottom:20px;
+left:15px;
+right:15px
+}
+
+.tiny{
+font-size:11px;
+color:#5e6c82
+}
+
+.main{
+margin-left:245px;
+width:calc(100% - 245px);
+padding:28px 36px;
+max-width:1600px
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+gap:20px;
+align-items:center;
+margin-bottom:23px
+}
+
+.eyebrow{
+color:#66809f;
+font-size:10px;
+text-transform:uppercase;
+letter-spacing:1.7px
+}
+
+.title{
+font-size:30px;
+font-weight:900;
+margin:5px 0
+}
+
+.sub{
+color:var(--muted);
+font-size:12px
+}
+
+.actions{
+display:flex;
+gap:8px;
+align-items:center
+}
+
+.btn{
+border:1px solid #263852;
+background:#101a2a;
+color:#eaf2ff;
+border-radius:9px;
+padding:10px 14px;
+cursor:pointer;
+font-weight:700
+}
+
+.btn.primary{
+background:var(--cyan);
+border-color:var(--cyan);
+color:#031018
+}
+
+.btn.danger{
+color:#ff9da7
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:13px
+}
+
+.card,.panel{
+background:rgba(12,19,32,.92);
+border:1px solid var(--line);
+border-radius:13px;
+box-shadow:0 10px 35px #0002
+}
+
+.card{padding:18px}
+
+.label{
+font-size:11px;
+color:var(--muted)
+}
+
+.value{
+font-size:26px;
+font-weight:900;
+margin-top:7px
+}
+
+.delta{
+font-size:11px;
+margin-top:7px;
+color:var(--green)
+}
+
+.warn{color:var(--orange)}
+.dangerText{color:var(--red)}
+
+.section{
+display:grid;
+grid-template-columns:1.45fr 1fr;
+gap:14px;
+margin-top:14px
+}
+
+.panel{padding:18px}
+
+.panel h3{
+font-size:14px;
+margin:0 0 14px
+}
+
+.chart{
+height:235px;
+display:flex;
+align-items:end;
+gap:10px;
+padding:12px 8px 0;
+border-bottom:1px solid var(--line)
+}
+
+.barwrap{
+height:100%;
+flex:1;
+display:flex;
+align-items:end;
+justify-content:center;
+gap:3px
+}
+
+.bar{
+width:15px;
+border-radius:4px 4px 0 0
+}
+
+.income{background:var(--cyan)}
+.expense{background:var(--purple)}
+
+.months{
+display:flex;
+justify-content:space-around;
+color:#62718a;
+font-size:10px;
+padding-top:7px
+}
+
+.insight{
+border-left:3px solid var(--cyan);
+background:#101a2a;
+border-radius:7px;
+padding:11px 12px;
+margin:8px 0
+}
+
+.insight strong{font-size:12px}
+
+.insight p{
+color:#96a3b6;
+font-size:11px;
+line-height:1.45;
+margin:5px 0 0
+}
+
+.insight.ok{border-color:var(--green)}
+.insight.warn{border-color:var(--orange)}
+.insight.bad{border-color:var(--red)}
+
+.hidden{display:none!important}
+
+.table{
+width:100%;
+border-collapse:collapse;
+font-size:11px
+}
+
+.table th,.table td{
+padding:10px 7px;
+border-bottom:1px solid #172238;
+text-align:left
+}
+
+.table th{
+color:#65748c;
+font-weight:500
+}
+
+.pill{
+padding:4px 7px;
+border:1px solid #253a56;
+border-radius:20px;
+color:#8bdfff;
+font-size:10px
+}
+
+.search{
+background:#0b1422;
+border:1px solid #243650;
+color:white;
+border-radius:8px;
+padding:10px;
+width:190px
+}
+
+.health{
+display:grid;
+grid-template-columns:100px 1fr;
+gap:15px;
+align-items:center
+}
+
+.score{
+font-size:38px;
+font-weight:950;
+color:var(--green)
+}
+
+.meter{
+height:7px;
+background:#192338;
+border-radius:20px;
+overflow:hidden
+}
+
+.meter i{
+display:block;
+height:100%;
+background:var(--cyan)
+}
+
+.rows{
+display:grid;
+gap:4px
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+padding:11px 0;
+border-bottom:1px solid #172238
+}
+
+.drop{
+border:1px dashed #35516e;
+border-radius:12px;
+padding:38px;
+text-align:center;
+background:#09111e
+}
+
+.drop.drag{border-color:var(--cyan)}
+
+.modal{
+position:fixed;
+inset:0;
+background:#000b;
+display:none;
+place-items:center;
+z-index:20;
+padding:20px
+}
+
+.modal.open{display:grid}
+
+.modalbox{
+width:min(620px,100%);
+background:#0c1422;
+border:1px solid #2a405d;
+border-radius:15px;
+padding:22px
+}
+
+.toast{
+position:fixed;
+right:22px;
+bottom:22px;
+background:#111d30;
+border:1px solid #2a405d;
+padding:12px 15px;
+border-radius:9px;
+z-index:30
+}
+
+.empty{
+text-align:center;
+padding:40px;
+color:var(--muted)
+}
+
+.status{
+display:inline-flex;
+align-items:center;
+gap:6px;
+font-size:11px
+}
+
+.dot{
+width:7px;
+height:7px;
+border-radius:50%;
+background:var(--green);
+display:inline-block
+}
+
+.dot.off{
+background:var(--red)
+}
+
+@media(max-width:900px){
+aside{width:68px}
+.logo{font-size:0}
+.logo i{font-size:20px}
+nav button{
+font-size:0;
+text-align:center
+}
+.main{
+margin-left:68px;
+width:calc(100% - 68px);
+padding:18px
+}
+.grid{
+grid-template-columns:repeat(2,1fr)
+}
+.section{
+grid-template-columns:1fr
+}
+.top{
+align-items:flex-start
+}
+.search{
+width:130px
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<aside>
+
+<div class="logo">
+DataVortex <i>AI</i>
+</div>
+
+<nav>
+
+<button class="active"
+onclick="page('dashboard',this)">
+◈ &nbsp; Dashboard
+</button>
+
+<button onclick="page('transactions',this)">
+▤ &nbsp; Transações
+</button>
+
+<button onclick="page('analysis',this)">
+⌁ &nbsp; Inteligência IA
+</button>
+
+<button onclick="page('import',this)">
+↥ &nbsp; Dados
+</button>
+
+<button onclick="page('reports',this)">
+▣ &nbsp; Relatórios
+</button>
+
+</nav>
+
+<div class="bottom">
+<div class="tiny">DATAVORTEX AI</div>
+<div class="tiny">MVP · Cloud Engine</div>
+</div>
+
+</aside>
+
+
+<main class="main">
+
+<!-- DASHBOARD -->
+
+<section id="dashboard">
+
+<div class="top">
+
+<div>
+
+<div class="eyebrow">
+Financial intelligence ·
+<span class="status">
+<span class="dot" id="statusDot"></span>
+<span id="statusText">conectando...</span>
+</span>
+</div>
+
+<div class="title">
+Visão geral
+</div>
+
+<div class="sub" id="companySub">
+DataVortex AI · conectando ao backend
+</div>
+
+</div>
+
+<div class="actions">
+
+<input
+class="search"
+placeholder="Buscar transação..."
+oninput="filterRows(this.value)"
+>
+
+<button
+class="btn"
+onclick="page('import')">
+＋ Dados
+</button>
+
+<button
+class="btn primary"
+onclick="analyze()">
+✦ Analisar
+</button>
+
+</div>
+
+</div>
+
+
+<div class="grid">
+
+<div class="card">
+
+<div class="label">
+RECEITA
+</div>
+
+<div class="value" id="revenue">
+R$ 0
+</div>
+
+<div class="delta" id="revDelta">
+Carregando...
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="label">
+DESPESAS
+</div>
+
+<div class="value" id="expenses">
+R$ 0
+</div>
+
+<div class="delta warn" id="expDelta">
+Carregando...
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="label">
+MARGEM
+</div>
+
+<div class="value" id="margin">
+0%
+</div>
+
+<div class="delta" id="marginDelta">
+Carregando...
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="label">
+FLUXO DE CAIXA
+</div>
+
+<div class="value" id="cashflow">
+R$ 0
+</div>
+
+<div class="delta" id="cashDelta">
+Carregando...
+</div>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<div class="panel">
+
+<h3>
+Receita × despesas
+</h3>
+
+<div class="chart" id="chart"></div>
+
+<div class="months" id="months"></div>
+
+</div>
+
+
+<div class="panel">
+
+<h3>
+Diagnóstico automático
+</h3>
+
+<div id="diagnostics">
+<div class="empty">
+Carregando análise...
+</div>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<div class="panel">
+
+<h3>
+Distribuição de despesas
+</h3>
+
+<div id="categories">
+<div class="empty">
+Carregando...
+</div>
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h3>
+Saúde financeira
+</h3>
+
+<div class="health">
+
+<div class="score" id="score">
+—
+</div>
+
+<div>
+
+<b>
+Índice DataVortex
+</b>
+
+<p class="sub" id="scoreText">
+Processando indicadores...
+</p>
+
+<div class="meter">
+<i id="scoreMeter" style="width:0%"></i>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="rows" style="margin-top:15px">
+
+<div class="row">
+<span class="sub">Transações</span>
+<b id="txCount">0</b>
+</div>
+
+<div class="row">
+<span class="sub">Categorias</span>
+<b id="catCount">0</b>
+</div>
+
+<div class="row">
+<span class="sub">Maior despesa</span>
+<b id="largestExpense">—</b>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- TRANSAÇÕES -->
+
+<section id="transactions" class="hidden">
+
+<div class="top">
+
+<div>
+
+<div class="eyebrow">
+Data layer
+</div>
+
+<div class="title">
+Transações
+</div>
+
+<div class="sub">
+Dados armazenados no DataVortex AI
+</div>
+
+</div>
+
+<button
+class="btn primary"
+onclick="page('import')">
+Importar CSV
+</button>
+
+</div>
+
+
+<div class="panel">
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Data</th>
+<th>Descrição</th>
+<th>Categoria</th>
+<th>Tipo</th>
+<th>Valor</th>
+</tr>
+
+</thead>
+
+<tbody id="txBody">
+
+<tr>
+<td colspan="5">
+<div class="empty">
+Carregando transações...
+</div>
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- ANALYSIS -->
+
+<section id="analysis" class="hidden">
+
+<div class="top">
+
+<div>
+
+<div class="eyebrow">
+Decision engine
+</div>
+
+<div class="title">
+Inteligência IA
+</div>
+
+<div class="sub">
+Recomendações baseadas nos dados financeiros.
+</div>
+
+</div>
+
+<button
+class="btn primary"
+onclick="analyze()">
+Atualizar análise
+</button>
+
+</div>
+
+<div
+class="panel"
+id="analysisBody">
+Carregando...
+</div>
+
+</section>
+
+
+<!-- IMPORT -->
+
+<section id="import" class="hidden">
+
+<div class="top">
+
+<div>
+
+<div class="eyebrow">
+Data ingestion
+</div>
+
+<div class="title">
+Central de dados
+</div>
+
+<div class="sub">
+Envie um CSV para armazenar as transações no banco de dados.
+</div>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<div class="panel">
+
+<h3>
+Importar CSV
+</h3>
+
+<div
+class="drop"
+id="drop">
+
+<div style="font-size:30px">
+↥
+</div>
+
+<b>
+Arraste seu arquivo aqui
+</b>
+
+<p class="sub">
+ou selecione no dispositivo
+</p>
+
+<input
+id="file"
+type="file"
+accept=".csv"
+hidden
+>
+
+<button
+class="btn primary"
+onclick="document.getElementById('file').click()">
+Selecionar arquivo
+</button>
+
+<p
+id="fileName"
+class="sub">
+Colunas: data, descrição, categoria, tipo, valor
+</p>
+
+</div>
+
+<br>
+
+<button
+class="btn primary"
+onclick="processFile()">
+Enviar para DataVortex
+</button>
+
+<div
+id="importResult"
+class="sub"
+style="margin-top:12px">
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h3>
+Pipeline
+</h3>
+
+<div class="rows">
+
+<div class="row">
+<span>Recepção</span>
+<span class="pill">PRONTO</span>
+</div>
+
+<div class="row">
+<span>Validação</span>
+<span class="pill">AUTOMÁTICA</span>
+</div>
+
+<div class="row">
+<span>Normalização</span>
+<span class="pill">AUTOMÁTICA</span>
+</div>
+
+<div class="row">
+<span>PostgreSQL</span>
+<span class="pill">CLOUD</span>
+</div>
+
+<div class="row">
+<span>Analytics</span>
+<span class="pill">ATIVO</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- REPORTS -->
+
+<section id="reports" class="hidden">
+
+<div class="top">
+
+<div>
+
+<div class="eyebrow">
+Executive intelligence
+</div>
+
+<div class="title">
+Relatório
+</div>
+
+<div class="sub">
+Resumo executivo dos dados armazenados.
+</div>
+
+</div>
+
+<button
+class="btn primary"
+onclick="downloadReport()">
+↓ Exportar relatório
+</button>
+
+</div>
+
+<div
+class="panel"
+id="reportBody">
+Carregando relatório...
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+
+<div
+class="modal"
+id="modal">
+
+<div class="modalbox">
+
+<button
+class="btn"
+style="float:right"
+onclick="closeModal()">
+Fechar
+</button>
+
+<div class="eyebrow">
+DataVortex AI
+</div>
+
+<h2>
+Processamento concluído
+</h2>
+
+<p
+id="modalText"
+class="sub">
+</p>
+
+<button
+class="btn primary"
+onclick="closeModal();page('dashboard')">
+Ver dashboard
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/*
+====================================================
+DATAVORTEX AI — CLOUD FRONTEND
+====================================================
+*/
+
+const API_URL = window.location.origin;
+
+let token = null;
+
+let tx = [];
+
+let cloudStats = {
+revenue:0,
+expenses:0,
+margin:0,
+cashflow:0,
+transactions:0
+};
+
+
+/*
+====================================================
+UTILIDADES
+====================================================
+*/
+
+const money = n =>
+Number(n || 0).toLocaleString(
+"pt-BR",
+{
+style:"currency",
+currency:"BRL"
+}
+);
+
+
+function showToast(message){
+
+const e = document.createElement("div");
+
+e.className = "toast";
+
+e.textContent = message;
+
+document.body.appendChild(e);
+
+setTimeout(
+()=>e.remove(),
+2500
+);
+
+}
+
+
+/*
+====================================================
+STATUS
+====================================================
+*/
+
+function setStatus(online){
+
+const dot =
+document.getElementById("statusDot");
+
+const text =
+document.getElementById("statusText");
+
+if(online){
+
+dot.classList.remove("off");
+
+text.textContent = "online";
+
+}else{
+
+dot.classList.add("off");
+
+text.textContent = "offline";
+
+}
+
+}
+
+
+/*
+====================================================
+AUTENTICAÇÃO DEMO
+====================================================
+*/
+
+async function authenticate(){
+
+try{
+
+const response =
+await fetch(
+`${API_URL}/auth/demo`
+);
+
+if(!response.ok){
+
+throw new Error(
+"Falha ao obter token"
+);
+
+}
+
+const data =
+await response.json();
+
+token =
+data.access_token;
+
+localStorage.setItem(
+"dv_token",
+token
+);
+
+setStatus(true);
+
+return true;
+
+}catch(error){
+
+console.error(error);
+
+setStatus(false);
+
+return false;
+
+}
+
+}
+
+
+/*
+====================================================
+HEALTH CHECK
+====================================================
+*/
+
+async function checkHealth(){
+
+try{
+
+const response =
+await fetch(
+`${API_URL}/health`
+);
+
+if(!response.ok){
+
+throw new Error(
+"API offline"
+);
+
+}
+
+const data =
+await response.json();
+
+if(data.database){
+
+setStatus(true);
+
+document.getElementById(
+"companySub"
+).textContent =
+"DataVortex AI · PostgreSQL conectado";
+
+}else{
+
+setStatus(false);
+
+document.getElementById(
+"companySub"
+).textContent =
+"DataVortex AI · banco não conectado";
+
+}
+
+return data;
+
+}catch(error){
+
+console.error(error);
+
+setStatus(false);
+
+document.getElementById(
+"companySub"
+).textContent =
+"DataVortex AI · API indisponível";
+
+return null;
+
+}
+
+}
+
+
+/*
+====================================================
+CARREGAR ANALYTICS
+====================================================
+*/
+
+async function loadAnalytics(){
+
+if(!token){
+
+const authenticated =
+await authenticate();
+
+if(!authenticated){
+
+return;
+
+}
+
+}
+
+try{
+
+const response =
+await fetch(
+`${API_URL}/analytics/summary?token=${encodeURIComponent(token)}`
+);
+
+if(!response.ok){
+
+if(response.status === 401){
+
+await authenticate();
+
+return loadAnalytics();
+
+}
+
+throw new Error(
+"Erro ao carregar analytics"
+);
+
+}
+
+const data =
+await response.json();
+
+cloudStats = {
+
+revenue:Number(data.revenue || 0),
+
+expenses:Number(data.expenses || 0),
+
+margin:Number(data.margin || 0),
+
+cashflow:Number(data.cashflow || 0),
+
+transactions:Number(data.transactions || 0)
+
+};
+
+renderCloudDashboard();
+
+}catch(error){
+
+console.error(error);
+
+showToast(
+"Não foi possível carregar os dados."
+);
+
+}
+
+}
+
+
+/*
+====================================================
+DASHBOARD CLOUD
+====================================================
+*/
+
+function renderCloudDashboard(){
+
+const s = cloudStats;
+
+document.getElementById(
+"revenue"
+).textContent =
+money(s.revenue);
+
+document.getElementById(
+"expenses"
+).textContent =
+money(s.expenses);
+
+document.getElementById(
+"margin"
+).textContent =
+s.margin.toFixed(1) + "%";
+
+document.getElementById(
+"cashflow"
+).textContent =
+money(s.cashflow);
+
+document.getElementById(
+"txCount"
+).textContent =
+s.transactions;
+
+
+document.getElementById(
+"revDelta"
+).textContent =
+s.revenue > 0
+? "Dados do PostgreSQL"
+: "Nenhuma receita registrada";
+
+
+document.getElementById(
+"expDelta"
+).textContent =
+s.expenses > 0
+? "Dados do PostgreSQL"
+: "Nenhuma despesa registrada";
+
+
+document.getElementById(
+"marginDelta"
+).textContent =
+s.margin >= 0
+? "Margem calculada"
+: "Margem negativa";
+
+
+const cashDelta =
+document.getElementById(
+"cashDelta"
+);
+
+cashDelta.textContent =
+s.cashflow >= 0
+? "Fluxo positivo"
+: "Fluxo negativo";
+
+cashDelta.className =
+"delta " +
+(
+s.cashflow >= 0
+? ""
+: "dangerText"
+);
+
+
+const score =
+Math.max(
+0,
+Math.min(
+100,
+Math.round(
+50 +
+s.margin * 0.8 -
+(
+s.revenue
+? s.expenses / s.revenue * 10
+: 0
+)
+)
+)
+);
+
+
+document.getElementById(
+"score"
+).textContent =
+score;
+
+
+document.getElementById(
+"scoreMeter"
+).style.width =
+score + "%";
+
+
+document.getElementById(
+"scoreText"
+).textContent =
+score >= 75
+? "Operação com boa cobertura de caixa."
+: score >= 50
+? "Operação requer acompanhamento."
+: "Pressão financeira detectada.";
+
+
+renderCloudDiagnostics(score);
+
+renderReport();
+
+renderAnalysis();
+
+}
+
+
+/*
+====================================================
+DIAGNÓSTICO
+====================================================
+*/
+
+function renderCloudDiagnostics(score){
+
+const s = cloudStats;
+
+let diagnostics = [];
+
+if(s.cashflow >= 0){
+
+diagnostics.push([
+"ok",
+"Fluxo de caixa positivo",
+`O caixa líquido está positivo em ${money(s.cashflow)}.`
+]);
+
+}else{
+
+diagnostics.push([
+"bad",
+"Pressão de caixa",
+`As despesas superam as receitas em ${money(Math.abs(s.cashflow))}.`
+]);
+
+}
+
+
+if(s.margin >= 30){
+
+diagnostics.push([
+"ok",
+"Margem saudável",
+`A margem calculada está em ${s.margin.toFixed(1)}%.`
+]);
+
+}else if(s.margin >= 10){
+
+diagnostics.push([
+"warn",
+"Margem moderada",
+`A margem calculada está em ${s.margin.toFixed(1)}%.`
+]);
+
+}else{
+
+diagnostics.push([
+"bad",
+"Margem baixa",
+`A margem calculada está em ${s.margin.toFixed(1)}%.`
+]);
+
+}
+
+
+if(s.transactions === 0){
+
+diagnostics.push([
+"warn",
+"Banco vazio",
+"Importe um arquivo CSV para começar a gerar inteligência financeira."
+]);
+
+}else{
+
+diagnostics.push([
+"ok",
+"Dados processados",
+`${s.transactions} transações estão armazenadas no DataVortex AI.`
+]);
+
+}
+
+
+document.getElementById(
+"diagnostics"
+).innerHTML =
+diagnostics
+.map(
+x => `
+<div class="insight ${x[0]}">
+
+<strong>
+${x[1]}
+</strong>
+
+<p>
+${x[2]}
+</p>
+
+</div>
+`
+)
+.join("");
+
+}
+
+
+/*
+====================================================
+ANÁLISE
+====================================================
+*/
+
+function renderAnalysis(){
+
+const s = cloudStats;
+
+let items = [];
+
+
+if(s.cashflow < 0){
+
+items.push([
+"bad",
+"Ação prioritária: liquidez",
+"Reduza despesas discricionárias e acompanhe os compromissos de curto prazo."
+]);
+
+}else{
+
+items.push([
+"ok",
+"Liquidez preservada",
+`O fluxo líquido calculado é ${money(s.cashflow)}.`
+]);
+
+}
+
+
+if(s.margin < 20){
+
+items.push([
+"warn",
+"Margem exige atenção",
+`A margem atual é ${s.margin.toFixed(1)}%. Procure despesas que não acompanham a geração de receita.`
+]);
+
+}else{
+
+items.push([
+"ok",
+"Margem operacional positiva",
+`A margem atual é ${s.margin.toFixed(1)}%.`
+]);
+
+}
+
+
+if(s.transactions === 0){
+
+items.push([
+"warn",
+"Comece importando dados",
+"O motor analítico precisa de transações reais para gerar recomendações."
+]);
+
+}
+
+
+document.getElementById(
+"analysisBody"
+).innerHTML = `
+
+<div class="health" style="margin-bottom:16px">
+
+<div class="score">
+${Math.max(
+0,
+Math.min(
+100,
+Math.round(
+50 +
+s.margin * .8 -
+(s.revenue
+? s.expenses/s.revenue*10
+: 0)
+)
+)
+)}
+</div>
+
+<div>
+
+<b>
+Índice DataVortex
+</b>
+
+<p class="sub">
+Calculado a partir dos dados armazenados no PostgreSQL.
+</p>
+
+</div>
+
+</div>
+
+${
+items.map(
+x => `
+<div class="insight ${x[0]}">
+
+<strong>
+${x[1]}
+</strong>
+
+<p>
+${x[2]}
+</p>
+
+</div>
+`
+).join("")
+}
+
+`;
+
+}
+
+
+/*
+====================================================
+RELATÓRIO
+====================================================
+*/
+
+function renderReport(){
+
+const s = cloudStats;
+
+document.getElementById(
+"reportBody"
+).innerHTML = `
+
+<span class="pill">
+EXECUTIVE REPORT
+</span>
+
+<h3 style="margin-top:15px">
+Resumo financeiro
+</h3>
+
+<p class="sub">
+
+Foram processadas
+<b>${s.transactions}</b>
+transações.
+
+Receita:
+<b>${money(s.revenue)}</b>.
+
+Despesas:
+<b>${money(s.expenses)}</b>.
+
+Fluxo líquido:
+<b>${money(s.cashflow)}</b>.
+
+Margem:
+<b>${s.margin.toFixed(1)}%</b>.
+
+</p>
+
+<div class="insight ${
+s.cashflow >= 0
+? "ok"
+: "bad"
+}">
+
+<strong>
+${
+s.cashflow >= 0
+? "Fluxo positivo"
+: "Fluxo negativo"
+}
+</strong>
+
+<p>
+
+${
+s.cashflow >= 0
+? "As entradas superam as saídas no conjunto armazenado."
+: "As saídas superam as entradas no conjunto armazenado."
+}
+
+</p>
+
+</div>
+
+<p class="sub">
+
+Este relatório é uma análise automatizada do MVP DataVortex AI.
+
+</p>
+
+`;
+
+}
+
+
+/*
+====================================================
+UPLOAD CSV
+====================================================
+*/
+
+async function processFile(){
+
+const fileInput =
+document.getElementById("file");
+
+const file =
+fileInput.files[0];
+
+const result =
+document.getElementById(
+"importResult"
+);
+
+
+if(!file){
+
+result.textContent =
+"Selecione um arquivo CSV.";
+
+return;
+
+}
+
+
+if(!token){
+
+const authenticated =
+await authenticate();
+
+if(!authenticated){
+
+result.textContent =
+"Não foi possível autenticar com a API.";
+
+return;
+
+}
+
+}
+
+
+result.textContent =
+"Enviando dados para o DataVortex AI...";
+
+
+try{
+
+const formData =
+new FormData();
+
+formData.append(
+"file",
+file
+);
+
+
+const response =
+await fetch(
+`${API_URL}/transactions/upload?token=${encodeURIComponent(token)}`,
+{
+method:"POST",
+body:formData
+}
+);
+
+
+if(!response.ok){
+
+const errorText =
+await response.text();
+
+throw new Error(
+errorText || "Erro no upload"
+);
+
+}
+
+
+const data =
+await response.json();
+
+
+result.textContent =
+`✓ ${data.inserted} transações enviadas para o PostgreSQL.`;
+
+
+document.getElementById(
+"modalText"
+).textContent =
+`${data.inserted} transações foram processadas e armazenadas no banco de dados do DataVortex AI.`;
+
+document.getElementById(
+"modal"
+).classList.add(
+"open"
+);
+
+
+await loadAnalytics();
+
+showToast(
+"Dados enviados para a nuvem."
+);
+
+
+}catch(error){
+
+console.error(error);
+
+result.textContent =
+"Erro ao enviar o arquivo.";
+
+showToast(
+"Falha no upload."
+);
+
+}
+
+}
+
+
+/*
+====================================================
+CARREGAR TRANSAÇÕES
+====================================================
+*/
+
+async function loadTransactions(){
+
+if(!token){
+
+await authenticate();
+
+}
+
+try{
+
+/*
+O backend atual possui o endpoint
+de resumo, mas ainda não possui
+endpoint de listagem.
+
+Por isso o dashboard usa o resumo
+do PostgreSQL e mantém esta tabela
+informativa até adicionarmos o endpoint.
+*/
+
+document.getElementById(
+"txBody"
+).innerHTML = `
+
+<tr>
+
+<td colspan="5">
+
+<div class="empty">
+
+${cloudStats.transactions}
+
+transações armazenadas no PostgreSQL.
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+}catch(error){
+
+console.error(error);
+
+}
+
+}
+
+
+/*
+====================================================
+NAVEGAÇÃO
+====================================================
+*/
+
+function page(id,btn){
+
+document
+.querySelectorAll(
+"main>section"
+)
+.forEach(
+s => s.classList.add("hidden")
+);
+
+
+document
+.getElementById(id)
+.classList.remove("hidden");
+
+
+document
+.querySelectorAll(
+"nav button"
+)
+.forEach(
+b => b.classList.remove("active")
+);
+
+
+if(btn){
+
+btn.classList.add("active");
+
+}
+
+if(id === "transactions"){
+
+loadTransactions();
+
+}
+
+if(id === "reports"){
+
+renderReport();
+
+}
+
+if(id === "analysis"){
+
+renderAnalysis();
+
+}
+
+}
+
+
+/*
+====================================================
+ANÁLISE
+====================================================
+*/
+
+async function analyze(){
+
+await loadAnalytics();
+
+renderAnalysis();
+
+page("analysis");
+
+showToast(
+"Análise DataVortex atualizada."
+);
+
+}
+
+
+/*
+====================================================
+BUSCA
+====================================================
+*/
+
+function filterRows(q){
+
+q =
+q.toLowerCase();
+
+document
+.querySelectorAll(
+"#txBody tr"
+)
+.forEach(
+r => {
+
+r.style.display =
+r.innerText
+.toLowerCase()
+.includes(q)
+? ""
+: "none";
+
+}
+);
+
+}
+
+
+/*
+====================================================
+MODAL
+====================================================
+*/
+
+function closeModal(){
+
+document
+.getElementById("modal")
+.classList
+.remove("open");
+
+}
+
+
+/*
+====================================================
+RELATÓRIO
+====================================================
+*/
+
+function downloadReport(){
+
+const s = cloudStats;
+
+const text =
+
+`DATAVORTEX AI — RELATÓRIO EXECUTIVO
+
+Transações: ${s.transactions}
+
+Receita: ${money(s.revenue)}
+
+Despesas: ${money(s.expenses)}
+
+Fluxo: ${money(s.cashflow)}
+
+Margem: ${s.margin.toFixed(1)}%
+
+Índice DataVortex baseado nos indicadores atuais.
+
+Relatório automatizado do MVP DataVortex AI.
+`;
+
+
+const blob =
+new Blob(
+[text],
+{
+type:"text/plain"
+}
+);
+
+
+const a =
+document.createElement("a");
+
+
+a.href =
+URL.createObjectURL(blob);
+
+
+a.download =
+"DataVortex_Relatorio.txt";
+
+
+a.click();
+
+
+showToast(
+"Relatório exportado."
+);
+
+}
+
+
+/*
+====================================================
+DRAG & DROP
+====================================================
+*/
+
+const file =
+document.getElementById("file");
+
+const drop =
+document.getElementById("drop");
+
+
+file.addEventListener(
+"change",
+() => {
+
+document.getElementById(
+"fileName"
+).textContent =
+file.files[0]?.name ||
+"";
+
+}
+);
+
+
+drop.addEventListener(
+"dragover",
+e => {
+
+e.preventDefault();
+
+drop.classList.add(
+"drag"
+);
+
+}
+);
+
+
+drop.addEventListener(
+"dragleave",
+() => {
+
+drop.classList.remove(
+"drag"
+);
+
+}
+);
+
+
+drop.addEventListener(
+"drop",
+e => {
+
+e.preventDefault();
+
+drop.classList.remove(
+"drag"
+);
+
+file.files =
+e.dataTransfer.files;
+
+document.getElementById(
+"fileName"
+).textContent =
+file.files[0]?.name ||
+"";
+
+}
+);
+
+
+/*
+====================================================
+INICIALIZAÇÃO
+====================================================
+*/
+
+async function init(){
+
+const savedToken =
+localStorage.getItem(
+"dv_token"
+);
+
+if(savedToken){
+
+token =
+savedToken;
+
+}
+
+
+await checkHealth();
+
+await authenticate();
+
+await loadAnalytics();
+
+await loadTransactions();
+
+}
+
+init();
+
+</script>
+
+</body>
+  </html>
